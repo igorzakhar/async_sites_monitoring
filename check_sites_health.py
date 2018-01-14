@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime, timezone
 import re
 from urllib.parse import urlparse
 
@@ -33,7 +34,11 @@ async def whois_me(domain):
 async def get_status_for_each_url(domain, session):
     http_status = await fetch_response_status(domain, session)
     whois_info = await whois_me(domain)
-    return domain, http_status, whois_info
+    return {
+        'domain': domain,
+        'http_status': http_status,
+        'whois_info': whois_info
+    }
 
 
 async def check_sites_health(path_to_urls, loop):
@@ -46,7 +51,7 @@ async def check_sites_health(path_to_urls, loop):
         return await asyncio.gather(*tasks)
 
 
-def parse_expiration_date(domain, whois_response):
+def parse_expiry_date(domain, whois_response):
     domain_chunks = domain.split('.', 2)
     top_level_domain = domain_chunks[-1]
     pattern = getattr(regex_map, top_level_domain)
@@ -60,12 +65,20 @@ def parse_expiration_date(domain, whois_response):
 
 
 def print_results(results):
+    date_now = datetime.now(timezone.utc)
+    status_string = '{:20s}: status code: {}, days until expiry: {} days ({})'
     for result in results:
-        print(
-            result[0],
-            result[1],
-            parse_expiration_date(result[0], result[2])
+        expiry_date = parse_expiry_date(
+            result['domain'],
+            result['whois_info']
         )
+        days_until_expiry = expiry_date - date_now
+        print(status_string.format(
+            result['domain'],
+            result['http_status'],
+            days_until_expiry.days,
+            expiry_date.date()
+        ))
 
 
 if __name__ == '__main__':
