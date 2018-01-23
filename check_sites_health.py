@@ -1,13 +1,12 @@
 import asyncio
 import argparse
-from datetime import datetime, timezone
+from datetime import datetime
 import re
 from urllib.parse import urlparse
 
 from aiohttp import ClientSession
 import aiofiles
-import dateutil.parser
-import regex_map
+from ph4whois.parser import WhoisEntry
 
 
 async def load_urls4check(path):
@@ -53,21 +52,14 @@ async def check_sites_health(path_to_urls, loop):
 
 
 def parse_expiry_date(domain, whois_response):
-    maxsplit = 2
-    domain_chunks = domain.split('.', maxsplit)
-    top_level_domain = domain_chunks[-1]
-    pattern = getattr(regex_map, top_level_domain)
-    expiration_date = re.search(
-        pattern['expiration_date'],
-        whois_response,
-        re.IGNORECASE
-    )
-    expiration_date = expiration_date.group('date')
-    return dateutil.parser.parse(expiration_date)
+    dom = urlparse(domain).netloc
+    x = WhoisEntry.load(dom, whois_response)
+    expiration_date = x['expiration_date']
+    return expiration_date
 
 
 def print_results(check_sites_results):
-    date_now = datetime.now(timezone.utc)
+    date_now = datetime.now()
     status_string = '{:20s}: status code: {}, days until expiry: {} days ({})'
     for check_site in check_sites_results:
         expiry_date = parse_expiry_date(

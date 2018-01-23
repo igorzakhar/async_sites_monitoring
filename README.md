@@ -8,7 +8,7 @@
 В программе используются следующие сторонние библиотеки:  
 - [aiohttp](https://aiohttp.readthedocs.io/en/stable/)
 - [aiofiles](https://github.com/Tinche/aiofiles)
-- [python-dateutil](https://dateutil.readthedocs.io/en/stable/)
+- [ph4-python-whois](https://github.com/ph4r05/python-whois)
 
 Используйте команду pip для установки сторонних библиотек из файла зависимостей (или pip3 если есть конфликт с предустановленным Python 2):
 ```
