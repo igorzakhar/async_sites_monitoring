@@ -13,8 +13,8 @@ import regex_map
 async def load_urls4check(path):
     async with aiofiles.open(path, mode='r') as fp:
         urls = await fp.read()
-        urls = urls.rstrip().split('\n')
-        return urls
+        urls_list = urls.rstrip().split('\n')
+        return urls_list
 
 
 async def fetch_response_status(url, session):
