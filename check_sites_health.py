@@ -17,7 +17,7 @@ async def load_urls4check(path):
 
 
 async def fetch_response_status(url, session):
-    async with session.get(url) as response:
+    async with session.head(url) as response:
         return response.status
 
 
