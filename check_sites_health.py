@@ -45,7 +45,7 @@ async def check_sites_health(path_to_urls, loop):
     domains_list = await load_urls4check(path_to_urls)
     async with ClientSession(loop=loop) as session:
         tasks = [
-            asyncio.ensure_future(get_status_for_each_url(domain, session))
+            get_status_for_each_url(domain, session)
             for domain in domains_list
         ]
         return await asyncio.gather(*tasks)
