@@ -46,7 +46,3 @@ https://github.com  : status code: 200, days until expiry: 999 days (2020-10-09)
 https://yandex.ru   : status code: 200, days until expiry: 259 days (2018-09-30)
 http://langbridge.ru: status code: 200, days until expiry: 234 days (2018-09-06)
 ```
-
-# Цели проекта
-
-Код написан для образовательных целей. Учебный курс для веб-разработчиков - [DEVMAN.org](https://devman.org)
